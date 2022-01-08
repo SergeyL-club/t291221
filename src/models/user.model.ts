@@ -13,7 +13,7 @@ export interface UserDocumet extends mongoose.Document {
   comparePassword(cadidatePassword: string): Promise<boolean>;
 }
 
-const userSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema<UserDocumet>(
   {
     email: { type: String, required: true, unique: true },
     name: { type: String, required: true },
@@ -52,6 +52,6 @@ userSchema.methods.comparePassword = async function (
   });
 };
 
-const UserModel = mongoose.model(listModels.user, userSchema);
+const UserModel = mongoose.model<UserDocumet>(listModels.user, userSchema);
 
 export default UserModel;
