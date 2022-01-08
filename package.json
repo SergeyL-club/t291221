@@ -6,7 +6,8 @@
   "author": "SergeyL-club <damnazzel@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev --cls --respawn --transpile-only ./src/app.ts"
+    "dev": "ts-node-dev --cls --respawn --transpile-only ./src/app.ts",
+    "set-admin": "ts-node-dev --cls --transpile-only ./src/app.ts --admin"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

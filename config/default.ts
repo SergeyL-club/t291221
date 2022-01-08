@@ -1,3 +1,9 @@
+export interface adminObj {
+  name: string;
+  email: string;
+  password: string;
+}
+
 const port = 1337;
 const dbName = "RestApiDef";
 const mongoAdr = "localhost";
@@ -6,6 +12,12 @@ const dbUrl = `mongodb://${mongoAdr}:${mongoPort}/${dbName}`;
 const saltWorkFactor = 10;
 const accessTokenTtl = "15m";
 const refreshTokenTtl = "1y";
+const adminObj: adminObj = {
+  name: "admin",
+  email: "admin@mail.ru",
+  password: "admin132132",
+};
+
 const publicKey = `-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAxUZVplo9pTad0TS/wUQ6
 t6QB0zEizLkU5s5bJ+U2/IksmBjDjSoE9kwZnXRwfGQ4FDUiEpNKodY03v44UEvg
@@ -81,6 +93,7 @@ export enum ConfigParam {
   privateKey = "privateKey",
   accessTokenTtl = "accessTokenTtl",
   refreshTokenTtl = "refreshTokenTtl",
+  adminObj = "adminObj",
 }
 
 export default {
@@ -92,4 +105,5 @@ export default {
   privateKey,
   accessTokenTtl,
   refreshTokenTtl,
+  adminObj,
 };
