@@ -10,3 +10,7 @@ export async function createRole(
 ) {
   return RoleModel.create(input);
 }
+
+export async function deleteOneRole(query: FilterQuery<RoleDocumet>) {
+  return RoleModel.findOneAndDelete(query);
+}

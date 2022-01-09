@@ -21,3 +21,13 @@ export const getRoleSchema = object({
 });
 
 export type GetRoleInput = TypeOf<typeof getRoleSchema>;
+
+export const deleteOneRoleSchema = object({
+  body: object({
+    roleId: string({
+      required_error: "roleId is required",
+    }),
+  }),
+});
+
+export type deleteOneRoleInput = TypeOf<typeof deleteOneRoleSchema>;
