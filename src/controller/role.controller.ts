@@ -1,16 +1,19 @@
 import { Request, Response } from "express";
-import { omit } from "lodash";
 import {
   CreateRoleInput,
   deleteOneRoleInput,
   GetRoleInput,
 } from "../schema/role.schema";
-import { createRole, deleteOneRole, findRole } from "../service/role.service";
+import {
+  createRole,
+  deleteOneRole,
+  findOneRole,
+  findRole,
+} from "../service/role.service";
 import checkAdmin from "../utils/checkAdmin";
 import logger from "../utils/logger";
 import mongoose from "mongoose";
-import RoleModel from "../models/role.model";
-import UserModel from "../models/user.model";
+import { findUser } from "../service/user.service";
 
 export async function createRoleHandler(
   req: Request<{}, {}, CreateRoleInput["body"]>,
@@ -22,7 +25,7 @@ export async function createRoleHandler(
     }
 
     const role = await createRole(req.body);
-    return res.send(omit(role.toJSON(), "__v"));
+    return res.send(role);
   } catch (e: any) {
     logger.error(e);
     res.status(409).send(e.message);
@@ -51,14 +54,18 @@ export async function deleteOneRoleHadler(
   res: Response
 ) {
   try {
-    const roleDef = await RoleModel.findOne({ funClient: true });
+    const roleDef = await findOneRole({ funClient: true });
 
     let newRole;
     if (!roleDef) {
-      newRole = await RoleModel.create({ name: "Client" });
+      newRole = await createRole({
+        name: "Client",
+        funClient: true,
+        funAdmin: false,
+      });
     }
 
-    const candidatesRole = await UserModel.find({
+    const candidatesRole = await findUser({
       roleId: new mongoose.Types.ObjectId(req.body.roleId),
     });
 
@@ -78,7 +85,7 @@ export async function deleteOneRoleHadler(
     const role = await deleteOneRole({
       _id: new mongoose.Types.ObjectId(req.body.roleId),
     });
-    return res.send(omit(role?.toJSON(), "__v"));
+    return res.send(role);
   } catch (e: any) {
     logger.error(e);
     res.status(409).send(e.message);

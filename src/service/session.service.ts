@@ -2,18 +2,18 @@ import { FilterQuery, UpdateQuery } from "mongoose";
 import SessionModel, { SessionDocumet } from "../models/session.model";
 import { signJwt, verifyJwt } from "../utils/jwt.utils";
 import { get } from "lodash";
-import { findUser } from "./user.service";
+import { findOneUser } from "./user.service";
 import config from "config";
 import { ConfigParam } from "../../config/default";
 
 export async function createSession(userId: string, userAgent: string) {
   const session = await SessionModel.create({ user: userId, userAgent });
 
-  return session.toJSON();
+  return session;
 }
 
 export async function findSessions(query: FilterQuery<SessionDocumet>) {
-  return SessionModel.find(query).lean();
+  return SessionModel.find(query);
 }
 
 export async function updateSession(
@@ -36,7 +36,7 @@ export async function reIssueAccessToken({
 
   if (!session || !session.valid) return false;
 
-  const user = await findUser({ _id: session.user });
+  const user = await findOneUser({ _id: session.user });
 
   if (!user) return false;
 

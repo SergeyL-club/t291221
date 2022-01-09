@@ -49,6 +49,10 @@ export async function validatePassword({
   return omit(user.toJSON(), "password");
 }
 
+export async function findOneUser(query: FilterQuery<UserDocumet>) {
+  return UserModel.findOne(query);
+}
+
 export async function findUser(query: FilterQuery<UserDocumet>) {
-  return UserModel.findOne(query).lean();
+  return UserModel.find(query);
 }
