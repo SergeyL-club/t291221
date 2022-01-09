@@ -1,5 +1,8 @@
 import { Express } from "express";
-import { createRoleHandler } from "./controller/role.controller";
+import {
+  createRoleHandler,
+  getRoleHandler,
+} from "./controller/role.controller";
 import {
   createSessionHandler,
   deleteSessionHandler,
@@ -36,6 +39,8 @@ function routes(app: Express) {
     validateResource(createRoleSchema),
     createRoleHandler
   );
+
+  app.get(`/api/roles`, requireUser, requireAdmin, getRoleHandler);
 }
 
 export default routes;
