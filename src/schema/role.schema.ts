@@ -11,3 +11,13 @@ export const createRoleSchema = object({
 });
 
 export type CreateRoleInput = TypeOf<typeof createRoleSchema>;
+
+export const getRoleSchema = object({
+  body: object({
+    isMain: boolean({
+      required_error: "isMain is required",
+    }),
+  }),
+});
+
+export type GetRoleInput = TypeOf<typeof getRoleSchema>;
