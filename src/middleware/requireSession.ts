@@ -7,6 +7,7 @@ const requireSession = async function (
   next: NextFunction
 ) {
   const user = res.locals.user;
+
   if (!user) return res.sendStatus(403);
   const session = await SessionModel.findOne({ _id: user.session });
 

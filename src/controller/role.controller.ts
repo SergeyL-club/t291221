@@ -38,7 +38,7 @@ export async function getRoleHandler(
 ) {
   const user = res.locals.user;
 
-  const isAdmin = await checkAdmin(user._id);
+  const isAdmin = await checkAdmin(user._doc._id);
 
   if (!req.body.isMain && !isAdmin) return res.sendStatus(403);
 

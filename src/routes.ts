@@ -1,5 +1,10 @@
 import { Express } from "express";
 import {
+  createCategoryProductHadler,
+  deleteOneCategoryProductHandler,
+  findCategroyProductHandler,
+} from "./controller/categoryProduct.controller";
+import {
   createRoleHandler,
   deleteOneRoleHadler,
   getRoleHandler,
@@ -15,6 +20,7 @@ import requireAdmin from "./middleware/requireAdmin";
 import requireSession from "./middleware/requireSession";
 import requireUser from "./middleware/requireUser";
 import validateResource from "./middleware/validateResource";
+import { createCategoryProductSchema } from "./schema/categoryProduct.schema";
 import {
   createRoleSchema,
   deleteOneRoleSchema,
@@ -73,6 +79,31 @@ function routes(app: Express) {
     requireAdmin,
     validateResource(deleteOneRoleSchema),
     deleteOneRoleHadler
+  );
+
+  // category product
+  app.post(
+    `/api/categoryProducts`,
+    requireUser,
+    requireSession,
+    requireAdmin,
+    validateResource(createCategoryProductSchema),
+    createCategoryProductHadler
+  );
+
+  app.get(
+    `/api/categoryProducts`,
+    requireUser,
+    requireSession,
+    findCategroyProductHandler
+  );
+
+  app.delete(
+    `/api/categoryProducts`,
+    requireUser,
+    requireSession,
+    requireAdmin,
+    deleteOneCategoryProductHandler
   );
 }
 
