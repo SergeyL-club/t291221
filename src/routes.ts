@@ -7,6 +7,7 @@ import {
 import {
   createProductHadler,
   deleteOneProductHandler,
+  findProductHandler,
 } from "./controller/product.controller";
 import {
   createRoleHandler,
@@ -131,6 +132,7 @@ function routes(app: Express) {
     validateResource(deleteOneProductSchema),
     deleteOneProductHandler
   );
+  app.get(`/api/products`, requireUser, requireSession, findProductHandler);
 }
 
 export default routes;
