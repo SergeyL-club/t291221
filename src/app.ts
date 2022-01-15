@@ -18,7 +18,7 @@ if (process.argv.indexOf("--admin") !== -1) {
 const app = express();
 app.use(express.json({ limit: "400mb" }));
 app.use(deserializeUser);
-app.use(express.static(resolve(__dirname, `../statics`)));
+app.use(`/statics`, express.static(resolve(__dirname, `../statics`)));
 
 fs.mkdirSync(resolve(__dirname, `../statics`), { recursive: true });
 
