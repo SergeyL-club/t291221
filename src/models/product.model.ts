@@ -6,7 +6,8 @@ export interface ProductDocumet extends mongoose.Document {
   categoryId: mongoose.Types.ObjectId;
   abDesc: string;
   desc: string;
-  imgUrls: Array<string>;
+  imgPreviewUrls: Array<string>;
+  imgGalleryUrls: Array<string>;
   createAt: Date;
   updateAt: Date;
 }
@@ -21,7 +22,8 @@ const productSchema = new mongoose.Schema<ProductDocumet>(
     },
     abDesc: { type: String, default: "" },
     desc: { type: String, default: "" },
-    imgUrls: [{ type: String }],
+    imgPreviewUrls: [{ type: String }],
+    imgGalleryUrls: [{ type: String }],
   },
   {
     timestamps: true,

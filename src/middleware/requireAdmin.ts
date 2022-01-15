@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import RoleModel from "../models/role.model";
+import { Types } from "mongoose";
+import { findOneRole } from "../service/role.service";
 
 const requireAdmin = async function (
   req: Request,
@@ -8,7 +9,13 @@ const requireAdmin = async function (
 ) {
   const user = res.locals.user;
 
-  const role = await RoleModel.findOne({ _id: user._doc.roleId });
+  let role;
+  if (
+    !(role = await findOneRole({ _id: new Types.ObjectId(user.roleId) })) &&
+    !(role = await findOneRole({ _id: new Types.ObjectId(user._doc.roleId) }))
+  ) {
+    return res.sendStatus(403);
+  }
 
   if (!role || !role.funAdmin) {
     return res.sendStatus(403);

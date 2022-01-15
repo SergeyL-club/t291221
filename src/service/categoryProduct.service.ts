@@ -9,6 +9,12 @@ export async function findCategoryProduct(
   return CategoryProductModel.find(query);
 }
 
+export async function findOneCategoryProduct(
+  query: FilterQuery<CategoryProductDocumet>
+) {
+  return CategoryProductModel.findOne(query);
+}
+
 export async function createCategoryProduct(
   input: DocumentDefinition<
     Omit<CategoryProductDocumet, "createAt" | "updateAt">
