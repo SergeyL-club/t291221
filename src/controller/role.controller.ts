@@ -85,6 +85,7 @@ export async function deleteOneRoleHadler(
     const role = await deleteOneRole({
       _id: new mongoose.Types.ObjectId(req.body.roleId),
     });
+    if (!role) return res.status(400).send(`Role undefined`);
     return res.send(role);
   } catch (e: any) {
     logger.error(e);

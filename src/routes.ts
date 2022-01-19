@@ -5,6 +5,11 @@ import {
   findCategroyProductHandler,
 } from "./controller/categoryProduct.controller";
 import {
+  createCategoryServiceHadler,
+  deleteOneCategoryServiceHandler,
+  findCategroyServiceHandler,
+} from "./controller/categoryService.controller";
+import {
   createProductHadler,
   deleteOneProductHandler,
   findProductHandler,
@@ -26,6 +31,7 @@ import requireSession from "./middleware/requireSession";
 import requireUser from "./middleware/requireUser";
 import validateResource from "./middleware/validateResource";
 import { createCategoryProductSchema } from "./schema/categoryProduct.schema";
+import { createCategoryServiceSchema } from "./schema/categoryService.schema";
 import {
   createProductSchema,
   deleteOneProductSchema,
@@ -133,6 +139,31 @@ function routes(app: Express) {
     deleteOneProductHandler
   );
   app.get(`/api/products`, requireUser, requireSession, findProductHandler);
+
+  // category product
+  app.post(
+    `/api/categoryServices`,
+    requireUser,
+    requireSession,
+    requireAdmin,
+    validateResource(createCategoryServiceSchema),
+    createCategoryServiceHadler
+  );
+
+  app.get(
+    `/api/categoryServices`,
+    requireUser,
+    requireSession,
+    findCategroyServiceHandler
+  );
+
+  app.delete(
+    `/api/categoryServices`,
+    requireUser,
+    requireSession,
+    requireAdmin,
+    deleteOneCategoryServiceHandler
+  );
 }
 
 export default routes;

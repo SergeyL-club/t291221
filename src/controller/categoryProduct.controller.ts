@@ -36,6 +36,8 @@ export async function deleteOneCategoryProductHandler(
     const categoryProduct = await deleteOneCategoryProduct({
       _id: new mongoose.Types.ObjectId(req.body.id),
     });
+    if (!categoryProduct)
+      return res.status(400).send(`Category product undefined`);
     return res.send(categoryProduct);
   } catch (e: any) {
     logger.error(e);
