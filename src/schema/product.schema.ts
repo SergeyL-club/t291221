@@ -27,6 +27,12 @@ export const createProductSchema = object({
         required_error: "imgs required, length > 4",
       }
     ).min(4),
+    prices: array(
+      object({
+        currency: string(),
+        cost: number(),
+      })
+    ),
   }),
 });
 

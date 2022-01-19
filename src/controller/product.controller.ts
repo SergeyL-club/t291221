@@ -117,6 +117,7 @@ export async function createProductHadler(
       categoryId: candidateCategory._id,
       abDesc: req.body.abDesc,
       desc: req.body.desc,
+      prices: req.body.prices,
       imgPreviewUrls: imgPreview,
       imgGalleryUrls: imgGallery,
     });

@@ -8,9 +8,30 @@ export interface ProductDocumet extends mongoose.Document {
   desc: string;
   imgPreviewUrls: Array<string>;
   imgGalleryUrls: Array<string>;
+  prices: Array<PriceSchema>;
   createAt: Date;
   updateAt: Date;
 }
+
+export interface PriceSchema {
+  currency: string;
+  cost: number;
+}
+
+export enum Currency {
+  usd = "USD",
+  rub = "RUB",
+}
+
+export const priceSchema = new mongoose.Schema<PriceSchema>(
+  {
+    currency: { type: String, enum: Currency },
+    cost: { type: Number },
+  },
+  {
+    _id: false,
+  }
+);
 
 const productSchema = new mongoose.Schema<ProductDocumet>(
   {
@@ -22,6 +43,7 @@ const productSchema = new mongoose.Schema<ProductDocumet>(
     },
     abDesc: { type: String, default: "" },
     desc: { type: String, default: "" },
+    prices: [priceSchema],
     imgPreviewUrls: [{ type: String }],
     imgGalleryUrls: [{ type: String }],
   },
