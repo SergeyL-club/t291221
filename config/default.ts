@@ -8,6 +8,7 @@ const port = 1337;
 const dbName = "RestApiDef";
 const mongoAdr = "localhost";
 const mongoPort = "27017";
+const previewCount = 4;
 const dbUrl = `mongodb://${mongoAdr}:${mongoPort}/${dbName}`;
 const saltWorkFactor = 10;
 const accessTokenTtl = "15m";
@@ -94,6 +95,7 @@ export enum ConfigParam {
   accessTokenTtl = "accessTokenTtl",
   refreshTokenTtl = "refreshTokenTtl",
   adminObj = "adminObj",
+  previewCount = "previewCount",
 }
 
 export default {
@@ -106,4 +108,5 @@ export default {
   accessTokenTtl,
   refreshTokenTtl,
   adminObj,
+  previewCount,
 };
