@@ -11,9 +11,9 @@ import {
 import logger from "../utils/logger";
 import mongoose from "mongoose";
 import { findOneCategoryProduct } from "../service/categoryProduct.service";
-import fs from "fs";
 import { resolve } from "path";
 import { deleteFolder } from "../utils/deleteFolder";
+import saveImgs, { StatusSave } from "../utils/saveImgs";
 
 export async function createProductHadler(
   req: Request<{}, {}, CreateProductInput["body"]>,
@@ -27,88 +27,22 @@ export async function createProductHadler(
     if (!candidateCategory)
       return res.status(400).send(`No category candidate`);
 
-    // files array result
-    const imgErrors: Array<any> = [];
-    const imgPreview: Array<string> = [];
-    const imgGallery: Array<string> = [];
+    const saveImgsProduct = saveImgs(
+      req.body.name,
+      req.body.imgs,
+      req.body.previewIndex,
+      StatusSave.product
+    );
 
-    if (req.body.imgs.length > 0) {
-      // create directory product
-      fs.mkdirSync(
-        resolve(__dirname, `../../statics/imgProducts/${req.body.name}`),
-        {
-          recursive: true,
-        }
-      );
-    }
-
-    // save files
-    req.body.imgs.map((image, index) => {
-      let buffer = image.base64;
-
-      if (buffer.indexOf(";base64,") !== -1) {
-        let baseBuf;
-        if ((baseBuf = buffer.split(";base64,", 2).pop())) {
-          buffer = baseBuf;
-        }
-      }
-
-      try {
-        // save all files in gallery
-        fs.appendFileSync(
-          resolve(
-            __dirname,
-            `../../statics/imgProducts/${req.body.name}/image${index}.png`
-          ),
-          buffer,
-          { encoding: "base64" }
-        );
-        imgGallery.push(
-          `/statics/imgProducts/${req.body.name}/image${index}.png`
-        );
-
-        // save url preview
-        if (req.body.previewIndex.indexOf(index) !== -1) {
-          imgPreview.push(
-            `/statics/imgProducts/${req.body.name}/image${index}`
-          );
-        }
-      } catch (e) {
-        console.log(e);
-
-        // error save
-        imgErrors.push({
-          message: "no save image",
-          name: image.name,
-          indexArray: index,
-        });
-      }
-    });
-
-    // add deficient
-    if (imgPreview.length < 4) {
-      let getImgs = imgGallery.filter((imgUrlGallery) => {
-        let check = true;
-        imgPreview.map((imgUrlPreview) => {
-          if (imgUrlGallery === imgUrlPreview) check = false;
-        });
-        return check;
-      });
-
-      // check length getImgs
-      if (getImgs.length >= 4 - imgPreview.length) {
-        const forIndex = 4 - imgPreview.length;
-        for (let i = 0; i < forIndex; i++) {
-          let el = getImgs.shift();
-          if (el) {
-            imgPreview.push(el);
-          }
-        }
-      } else {
+    if (saveImgsProduct.status === false) {
+      if (saveImgsProduct.error) {
+        return res.status(409).send(saveImgsProduct.error.message);
+      } else if (saveImgsProduct.imgErrors) {
         return res
           .status(409)
-          .send(`No normal lenght gallery img and/or lenght preview img`);
+          .send(`Error save img, length ${saveImgsProduct.imgErrors.length}`);
       }
+      return res.status(409).send(`Error global save img`);
     }
 
     // create product
@@ -118,14 +52,13 @@ export async function createProductHadler(
       abDesc: req.body.abDesc,
       desc: req.body.desc,
       prices: req.body.prices,
-      imgPreviewUrls: imgPreview,
-      imgGalleryUrls: imgGallery,
+      imgPreviewUrls: saveImgsProduct.imgPreviewUrls,
+      imgGalleryUrls: saveImgsProduct.imgGalleryUrls,
     });
 
     // return result
     return res.status(200).json({
       ...newProduct,
-      imgErrors,
     });
   } catch (e: any) {
     // errors
