@@ -53,7 +53,7 @@ function saveImgs(
       : "default";
 
   if (!fs.existsSync(resolve(__dirname, `../../statics/${directory}`))) {
-    fs.mkdirSync(resolve(__dirname, `../../statics/${ImgDirectory.product}`));
+    fs.mkdirSync(resolve(__dirname, `../../statics/${directory}`));
   }
 
   try {

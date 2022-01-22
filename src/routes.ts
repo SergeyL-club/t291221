@@ -19,6 +19,7 @@ import {
   deleteOneRoleHadler,
   getRoleHandler,
 } from "./controller/role.controller";
+import { createServiceHadler } from "./controller/service.controller";
 import {
   createSessionHandler,
   deleteSessionHandler,
@@ -41,6 +42,7 @@ import {
   deleteOneRoleSchema,
   getRoleSchema,
 } from "./schema/role.schema";
+import { createServiceSchema } from "./schema/service.schema";
 import { createSessionSchema } from "./schema/session.schema";
 import { createUserSchema } from "./schema/user.schema";
 
@@ -140,7 +142,7 @@ function routes(app: Express) {
   );
   app.get(`/api/products`, requireUser, requireSession, findProductHandler);
 
-  // category product
+  // category service
   app.post(
     `/api/categoryServices`,
     requireUser,
@@ -163,6 +165,16 @@ function routes(app: Express) {
     requireSession,
     requireAdmin,
     deleteOneCategoryServiceHandler
+  );
+
+  // service
+  app.post(
+    `/api/services`,
+    requireUser,
+    requireSession,
+    requireAdmin,
+    validateResource(createServiceSchema),
+    createServiceHadler
   );
 }
 

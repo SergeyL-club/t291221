@@ -4,5 +4,6 @@ export enum listModels {
   role = "Role",
   categoryProduct = "CategoryProduct",
   product = "Product",
-  categoryService = "categoryService",
+  categoryService = "CategoryService",
+  service = "Service",
 }
