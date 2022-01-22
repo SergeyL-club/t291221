@@ -9,7 +9,7 @@ import {
   findProduct,
 } from "../service/product.service";
 import logger from "../utils/logger";
-import mongoose from "mongoose";
+import { Types } from "mongoose";
 import { findOneCategoryProduct } from "../service/categoryProduct.service";
 import { resolve } from "path";
 import { deleteFolder } from "../utils/deleteFolder";
@@ -21,7 +21,7 @@ export async function createProductHadler(
 ) {
   try {
     const candidateCategory = await findOneCategoryProduct({
-      _id: new mongoose.Types.ObjectId(req.body.categoryId),
+      _id: new Types.ObjectId(req.body.categoryId),
     });
 
     if (!candidateCategory)
@@ -77,7 +77,7 @@ export async function deleteOneProductHandler(
 ) {
   try {
     const product = await deleteOneProduct({
-      _id: new mongoose.Types.ObjectId(req.body.id),
+      _id: new Types.ObjectId(req.body.id),
     });
 
     if (!product) return res.status(400).send(`Product undefined`);
