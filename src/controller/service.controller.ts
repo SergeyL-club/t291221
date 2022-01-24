@@ -1,11 +1,20 @@
 import { Request, Response } from "express";
-import { CreateServiceInput } from "../schema/service.schema";
+import {
+  CreateServiceInput,
+  DeleteOneServiceInput,
+} from "../schema/service.schema";
 import { findOneCategoryService } from "../service/categoryService.service";
 import { Types } from "mongoose";
-import saveImgs, { StatusSave } from "../utils/saveImgs";
-import { createService } from "../service/service.service";
+import saveImgs, { ImgDirectory, StatusSave } from "../utils/saveImgs";
+import {
+  createService,
+  deleteOneService,
+  findService,
+} from "../service/service.service";
 import { findUser } from "../service/user.service";
 import logger from "../utils/logger";
+import { deleteFolder } from "../utils/deleteFolder";
+import { resolve } from "path";
 
 enum DayName {
   sunday = "Sunday",
@@ -77,6 +86,43 @@ export async function createServiceHadler(
     });
   } catch (e: any) {
     // errors
+    logger.error(e);
+    return res.status(409).send(e.message);
+  }
+}
+
+export async function findServiceHandler(req: Request, res: Response) {
+  return res.send(await findService({}));
+}
+
+export async function deleteOneServiceHandler(
+  req: Request<{}, {}, DeleteOneServiceInput["body"]>,
+  res: Response
+) {
+  try {
+    const service = await deleteOneService({
+      _id: new Types.ObjectId(req.body.id),
+    });
+
+    if (!service) return res.status(400).send(`Service undefined`);
+
+    // delete product directory
+    let deleteDirectoryImgs = false;
+    if (service) {
+      deleteDirectoryImgs = deleteFolder(
+        resolve(
+          __dirname,
+          `../../statics/${ImgDirectory.service}/${service.name}`
+        )
+      );
+    }
+
+    // return deleteEl
+    return res.status(200).json({
+      ...service,
+      deleteDirectoryImgs,
+    });
+  } catch (e: any) {
     logger.error(e);
     return res.status(409).send(e.message);
   }

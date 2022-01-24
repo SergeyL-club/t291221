@@ -19,7 +19,11 @@ import {
   deleteOneRoleHadler,
   getRoleHandler,
 } from "./controller/role.controller";
-import { createServiceHadler } from "./controller/service.controller";
+import {
+  createServiceHadler,
+  deleteOneServiceHandler,
+  findServiceHandler,
+} from "./controller/service.controller";
 import {
   createSessionHandler,
   deleteSessionHandler,
@@ -31,8 +35,14 @@ import requireAdmin from "./middleware/requireAdmin";
 import requireSession from "./middleware/requireSession";
 import requireUser from "./middleware/requireUser";
 import validateResource from "./middleware/validateResource";
-import { createCategoryProductSchema } from "./schema/categoryProduct.schema";
-import { createCategoryServiceSchema } from "./schema/categoryService.schema";
+import {
+  createCategoryProductSchema,
+  deleteOneCategoryProductSchema,
+} from "./schema/categoryProduct.schema";
+import {
+  createCategoryServiceSchema,
+  deleteOneCategoryServiceSchema,
+} from "./schema/categoryService.schema";
 import {
   createProductSchema,
   deleteOneProductSchema,
@@ -42,7 +52,10 @@ import {
   deleteOneRoleSchema,
   getRoleSchema,
 } from "./schema/role.schema";
-import { createServiceSchema } from "./schema/service.schema";
+import {
+  createServiceSchema,
+  deleteOneServiceSchema,
+} from "./schema/service.schema";
 import { createSessionSchema } from "./schema/session.schema";
 import { createUserSchema } from "./schema/user.schema";
 
@@ -120,6 +133,7 @@ function routes(app: Express) {
     requireUser,
     requireSession,
     requireAdmin,
+    validateResource(deleteOneCategoryProductSchema),
     deleteOneCategoryProductHandler
   );
 
@@ -132,6 +146,9 @@ function routes(app: Express) {
     validateResource(createProductSchema),
     createProductHadler
   );
+
+  app.get(`/api/products`, requireUser, requireSession, findProductHandler);
+
   app.delete(
     `/api/products`,
     requireUser,
@@ -140,7 +157,6 @@ function routes(app: Express) {
     validateResource(deleteOneProductSchema),
     deleteOneProductHandler
   );
-  app.get(`/api/products`, requireUser, requireSession, findProductHandler);
 
   // category service
   app.post(
@@ -164,6 +180,7 @@ function routes(app: Express) {
     requireUser,
     requireSession,
     requireAdmin,
+    validateResource(deleteOneCategoryServiceSchema),
     deleteOneCategoryServiceHandler
   );
 
@@ -175,6 +192,17 @@ function routes(app: Express) {
     requireAdmin,
     validateResource(createServiceSchema),
     createServiceHadler
+  );
+
+  app.get(`/api/services`, requireUser, requireSession, findServiceHandler);
+
+  app.delete(
+    `/api/services`,
+    requireUser,
+    requireSession,
+    requireAdmin,
+    validateResource(deleteOneServiceSchema),
+    deleteOneServiceHandler
   );
 }
 

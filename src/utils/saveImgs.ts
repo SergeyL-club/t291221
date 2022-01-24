@@ -10,7 +10,7 @@ export enum StatusSave {
   service = "service",
 }
 
-enum ImgDirectory {
+export enum ImgDirectory {
   product = "imgsProducts",
   service = "imgsServices",
 }
@@ -122,8 +122,6 @@ function saveImgs(
         }
         uniqueUrls.push(imgGalleryUrls[i]);
       }
-
-      console.log(uniqueUrls.length, previewCount - imgPreviewUrls.length);
 
       if (uniqueUrls.length < previewCount - imgPreviewUrls.length) {
         deleteFolder(

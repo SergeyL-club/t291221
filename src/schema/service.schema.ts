@@ -45,3 +45,13 @@ export const createServiceSchema = object({
 });
 
 export type CreateServiceInput = TypeOf<typeof createServiceSchema>;
+
+export const deleteOneServiceSchema = object({
+  body: object({
+    id: string({
+      required_error: "id is required",
+    }),
+  }),
+});
+
+export type DeleteOneServiceInput = TypeOf<typeof deleteOneServiceSchema>;

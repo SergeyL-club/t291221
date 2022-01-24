@@ -13,7 +13,7 @@ import { Types } from "mongoose";
 import { findOneCategoryProduct } from "../service/categoryProduct.service";
 import { resolve } from "path";
 import { deleteFolder } from "../utils/deleteFolder";
-import saveImgs, { StatusSave } from "../utils/saveImgs";
+import saveImgs, { ImgDirectory, StatusSave } from "../utils/saveImgs";
 
 export async function createProductHadler(
   req: Request<{}, {}, CreateProductInput["body"]>,
@@ -86,7 +86,10 @@ export async function deleteOneProductHandler(
     let deleteDirectoryImgs = false;
     if (product) {
       deleteDirectoryImgs = deleteFolder(
-        resolve(__dirname, `../../statics/imgProducts/${product.name}`)
+        resolve(
+          __dirname,
+          `../../statics/${ImgDirectory.product}/${product.name}`
+        )
       );
     }
 
