@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CreateUserInput } from "../schema/user.schema";
-import { createUser } from "../service/user.service";
+import { createUser, getParamUser } from "../service/user.service";
 import logger from "../utils/logger";
 
 export async function createUserHadler(
@@ -13,5 +13,15 @@ export async function createUserHadler(
   } catch (e: any) {
     logger.error(e);
     return res.status(409).send(e.message);
+  }
+}
+
+export async function getParamUserHadler(req: Request, res: Response) {
+  try {
+    const userParam = await getParamUser(res.locals.user._doc._id);
+    return res.status(200).json(userParam);
+  } catch (e: any) {
+    logger.error(e);
+    res.status(409).send(e);
   }
 }

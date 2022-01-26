@@ -8,6 +8,7 @@ import deserializeUser from "./middleware/deserializeUser";
 import fs from "fs";
 import defaultCreateAdmin from "./utils/defaultCreateAdmin";
 import { resolve } from "path";
+import cors from "cors";
 
 const port = config.get<number>(ConfigParam.port);
 
@@ -18,6 +19,7 @@ if (process.argv.indexOf("--admin") !== -1) {
 const app = express();
 app.use(express.json({ limit: "400mb" }));
 app.use(deserializeUser);
+app.use(cors());
 app.use(`/statics`, express.static(resolve(__dirname, `../statics`)));
 
 fs.mkdirSync(resolve(__dirname, `../statics`), { recursive: true });

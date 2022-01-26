@@ -1,7 +1,8 @@
 import { omit } from "lodash";
-import { DocumentDefinition, FilterQuery } from "mongoose";
+import { DocumentDefinition, FilterQuery, Types } from "mongoose";
 import RoleModel from "../models/role.model";
 import UserModel, { UserDocumet } from "../models/user.model";
+import { findOneRole } from "./role.service";
 
 export async function createUser(
   input: DocumentDefinition<
@@ -55,4 +56,16 @@ export async function findOneUser(query: FilterQuery<UserDocumet>) {
 
 export async function findUser(query: FilterQuery<UserDocumet>) {
   return UserModel.find(query);
+}
+
+export async function getParamUser(id: Types.ObjectId) {
+  let candidate = await findOneUser({ _id: id });
+  if (candidate) {
+    let role = await findOneRole({ _id: candidate.roleId });
+    return {
+      ...omit(candidate.toJSON(), "roleId"),
+      role,
+    };
+  }
+  return new Error(`No candidate`);
 }

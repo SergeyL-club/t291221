@@ -29,7 +29,10 @@ import {
   deleteSessionHandler,
   getUserSessionsHandler,
 } from "./controller/session.controller";
-import { createUserHadler } from "./controller/user.controller";
+import {
+  createUserHadler,
+  getParamUserHadler,
+} from "./controller/user.controller";
 import antiRequireUser from "./middleware/antiRequireUser";
 import requireAdmin from "./middleware/requireAdmin";
 import requireSession from "./middleware/requireSession";
@@ -67,6 +70,8 @@ function routes(app: Express) {
     validateResource(createUserSchema),
     createUserHadler
   );
+
+  app.get(`/api/users`, requireUser, requireSession, getParamUserHadler);
 
   // session
   app.post(
@@ -121,12 +126,7 @@ function routes(app: Express) {
     createCategoryProductHadler
   );
 
-  app.get(
-    `/api/categoryProducts`,
-    requireUser,
-    requireSession,
-    findCategroyProductHandler
-  );
+  app.get(`/api/categoryProducts`, findCategroyProductHandler);
 
   app.delete(
     `/api/categoryProducts`,
@@ -168,12 +168,7 @@ function routes(app: Express) {
     createCategoryServiceHadler
   );
 
-  app.get(
-    `/api/categoryServices`,
-    requireUser,
-    requireSession,
-    findCategroyServiceHandler
-  );
+  app.get(`/api/categoryServices`, findCategroyServiceHandler);
 
   app.delete(
     `/api/categoryServices`,
