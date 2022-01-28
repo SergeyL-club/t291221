@@ -5,6 +5,9 @@ export const createCategoryServiceSchema = object({
     name: string({
       required_error: "name is required",
     }),
+    previewImg: string({
+      required_error: "preview img is required",
+    }),
   }),
 });
 
