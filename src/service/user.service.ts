@@ -63,7 +63,7 @@ export async function getParamUser(id: Types.ObjectId) {
   if (candidate) {
     let role = await findOneRole({ _id: candidate.roleId });
     return {
-      ...omit(candidate.toJSON(), "roleId"),
+      ...omit(candidate.toJSON(), "roleId", "password"),
       role,
     };
   }

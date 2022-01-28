@@ -18,7 +18,7 @@ export async function createUserHadler(
 
 export async function getParamUserHadler(req: Request, res: Response) {
   try {
-    const userParam = await getParamUser(res.locals.user._doc._id);
+    const userParam = await getParamUser(res.locals.user._id);
     return res.status(200).json(userParam);
   } catch (e: any) {
     logger.error(e);
