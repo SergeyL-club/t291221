@@ -57,7 +57,7 @@ export async function deleteOneCategoryServiceHandler(
       fs.unlinkSync(
         resolve(
           __dirname,
-          `../../statics/categoryServices/${categoryService.name}.png`
+          `../../statics/${StatusSaveOne.categoryServices}/${categoryService.name}.png`
         )
       );
     }

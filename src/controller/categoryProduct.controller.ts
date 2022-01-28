@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { omit } from "lodash";
 import mongoose from "mongoose";
+import { resolve } from "path";
 import {
   CreateCategoryProductInput,
   DeleteOneCategoryProductInput,
@@ -12,6 +13,7 @@ import {
 } from "../service/categoryProduct.service";
 import logger from "../utils/logger";
 import saveImg, { StatusSaveOne } from "../utils/saveImg";
+import fs from "fs";
 
 export async function createCategoryProductHadler(
   req: Request<{}, {}, CreateCategoryProductInput["body"]>,
@@ -51,6 +53,15 @@ export async function deleteOneCategoryProductHandler(
     const categoryProduct = await deleteOneCategoryProduct({
       _id: new mongoose.Types.ObjectId(req.body.id),
     });
+    if (categoryProduct) {
+      fs.unlinkSync(
+        resolve(
+          __dirname,
+          `../../statics/${StatusSaveOne.categoryProducts}/${categoryProduct.name}.png`
+        )
+      );
+    }
+
     if (!categoryProduct)
       return res.status(400).send(`Category product undefined`);
     return res.send(categoryProduct);
