@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { omit } from "lodash";
 import mongoose from "mongoose";
 import {
   CreateCategoryProductInput,
@@ -10,13 +11,27 @@ import {
   deleteOneCategoryProduct,
 } from "../service/categoryProduct.service";
 import logger from "../utils/logger";
+import saveImg, { StatusSaveOne } from "../utils/saveImg";
 
 export async function createCategoryProductHadler(
   req: Request<{}, {}, CreateCategoryProductInput["body"]>,
   res: Response
 ) {
   try {
-    const categoryProduct = await createCategoryProduct(req.body);
+    const img = saveImg(
+      req.body.name,
+      req.body.previewImg,
+      StatusSaveOne.categoryProducts
+    );
+
+    if (img.status === false) {
+      return res.status(409).send(img.error.message);
+    }
+
+    const categoryProduct = await createCategoryProduct({
+      ...omit(req.body, "previewImg"),
+      imgUrl: img.url,
+    });
     return res.send(categoryProduct);
   } catch (e: any) {
     logger.error(e);

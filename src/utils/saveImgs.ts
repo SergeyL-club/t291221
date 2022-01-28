@@ -33,7 +33,7 @@ interface returnStatusNoOk {
   }>;
 }
 
-interface imgProduct {
+interface imgPreset {
   name: string;
   desc: string;
   base64: string;
@@ -41,7 +41,7 @@ interface imgProduct {
 
 function saveImgs(
   nameDirectory: string,
-  imgs: Array<imgProduct>,
+  imgs: Array<imgPreset>,
   previewIndex: Array<number>,
   statusSave: string
 ): returnStatusOk | returnStatusNoOk {

@@ -3,6 +3,7 @@ import { listModels } from "./listModels";
 
 export interface CategoryProductDocumet extends mongoose.Document {
   name: string;
+  imgUrl: string;
   createAt: Date;
   updateAt: Date;
 }
@@ -10,6 +11,7 @@ export interface CategoryProductDocumet extends mongoose.Document {
 const categoryProductSchema = new mongoose.Schema<CategoryProductDocumet>(
   {
     name: { type: String, required: true, unique: true },
+    imgUrl: { type: String, required: true },
   },
   {
     timestamps: true,
