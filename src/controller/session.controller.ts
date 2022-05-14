@@ -8,11 +8,12 @@ import { validatePassword } from "../service/user.service";
 import { signJwt } from "../utils/jwt.utils";
 import config from "config";
 import { ConfigParam } from "../../config/default";
+import { omit } from "lodash";
 
 export async function createSessionHandler(req: Request, res: Response) {
   const user = await validatePassword(req.body);
 
-  if (!user) return res.status(401).send("Invalid email or password");
+  if (!user) return res.status(401).send("Invalid email or password").end();
 
   const session = await createSession(user._id, req.get("user-agent") || "");
 
@@ -26,15 +27,17 @@ export async function createSessionHandler(req: Request, res: Response) {
     { expiresIn: config.get<string>(ConfigParam.refreshTokenTtl) } // 1 year in config
   );
 
-  return res.send({ accessToken, refreshToken });
+  return res.status(200).send({ accessToken, refreshToken }).end();
 }
 
 export async function getUserSessionsHandler(req: Request, res: Response) {
   const userId = res.locals.user._id;
 
   const sessions = await findSessions({ user: userId, valid: true });
+  let omitSessions: any[] = [];
+  sessions.forEach(session => omitSessions.push(omit(session.toJSON(), "_id", "user", "__v")));
 
-  return res.send(sessions);
+  return res.status(200).send(omitSessions).end();
 }
 
 export async function deleteSessionHandler(req: Request, res: Response) {
@@ -42,8 +45,8 @@ export async function deleteSessionHandler(req: Request, res: Response) {
 
   await updateSession({ _id: sessionId }, { valid: false });
 
-  return res.send({
+  return res.status(200).send({
     accessToken: null,
     refreshToken: null,
-  });
+  }).end();
 }

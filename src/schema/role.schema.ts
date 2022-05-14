@@ -24,8 +24,8 @@ export type GetRoleInput = TypeOf<typeof getRoleSchema>;
 
 export const deleteOneRoleSchema = object({
   body: object({
-    roleId: string({
-      required_error: "roleId is required",
+    role: string({
+      required_error: "role is required",
     }),
   }),
 });

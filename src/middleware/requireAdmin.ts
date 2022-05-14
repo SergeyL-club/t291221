@@ -8,7 +8,7 @@ const requireAdmin = async function (
 ) {
   const user = res.locals.user;
 
-  const role = await RoleModel.findOne({ _id: user.roleId });
+  const role = await RoleModel.findOne({ _id: user.role });
 
   if (!role || !role.funAdmin) {
     return res.sendStatus(403);

@@ -15,7 +15,7 @@ async function defaultCreateAdmin() {
       funClient: false,
       funAdmin: true,
     });
-    await UserModel.create({ ...admin, roleId: role._id });
+    await UserModel.create({ ...admin, role: role._id });
     logger.info({ admin }, `Create admin`);
     process.exit(0);
   } catch (e: any) {

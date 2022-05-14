@@ -1,11 +1,11 @@
 import { omit } from "lodash";
 import { DocumentDefinition, FilterQuery } from "mongoose";
-import RoleModel from "../models/role.model";
+import RoleModel, { RoleDocumet } from "../models/role.model";
 import UserModel, { UserDocumet } from "../models/user.model";
 
 export async function createUser(
   input: DocumentDefinition<
-    Omit<UserDocumet, "createAt" | "updateAt" | "comparePassword" | "roleId">
+    Omit<UserDocumet, "createAt" | "updateAt" | "comparePassword" | "role">
   >
 ) {
   try {
@@ -18,9 +18,9 @@ export async function createUser(
 
     let modifyInput;
     if (role) {
-      modifyInput = { ...input, roleId: role._id };
+      modifyInput = { ...input, role: role._id };
     } else if (newRole) {
-      modifyInput = { ...input, roleId: newRole._id };
+      modifyInput = { ...input, role: newRole._id };
     }
 
     const user = await UserModel.create(modifyInput);
@@ -52,6 +52,11 @@ export async function validatePassword({
 export async function findOneUser(query: FilterQuery<UserDocumet>) {
   return UserModel.findOne(query);
 }
+
+export async function findOneFullUser(query: FilterQuery<UserDocumet>) {
+  return UserModel.findOne(query).populate<{ role: RoleDocumet }>("role");
+}
+
 
 export async function findUser(query: FilterQuery<UserDocumet>) {
   return UserModel.find(query);

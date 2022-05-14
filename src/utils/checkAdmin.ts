@@ -7,7 +7,7 @@ const checkAdmin = async function (userId: mongoose.Types.ObjectId) {
 
   if (!user) return false;
 
-  const role = await RoleModel.findOne({ _id: user.roleId });
+  const role = await RoleModel.findOne({ _id: user.role });
 
   if (!role || !role.funAdmin) return false;
 

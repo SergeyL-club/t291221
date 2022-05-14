@@ -8,7 +8,7 @@ export interface UserDocumet extends mongoose.Document {
   email: string;
   name: string;
   password: string;
-  roleId: mongoose.Types.ObjectId;
+  role: mongoose.Types.ObjectId;
   createAt: Date;
   updateAt: Date;
   comparePassword(cadidatePassword: string): Promise<boolean>;
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema<UserDocumet>(
   {
     email: { type: String, required: true, unique: true },
     name: { type: String, required: true },
-    roleId: {
+    role: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: listModels.role,

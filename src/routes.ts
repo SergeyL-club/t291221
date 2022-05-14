@@ -9,7 +9,7 @@ import {
   deleteSessionHandler,
   getUserSessionsHandler,
 } from "./controller/session.controller";
-import { createUserHadler } from "./controller/user.controller";
+import { createUserHandler, getUserHandler } from "./controller/user.controller";
 import antiRequireUser from "./middleware/antiRequireUser";
 import requireAdmin from "./middleware/requireAdmin";
 import requireSession from "./middleware/requireSession";
@@ -29,7 +29,13 @@ function routes(app: Express) {
     `/api/users`,
     antiRequireUser,
     validateResource(createUserSchema),
-    createUserHadler
+    createUserHandler
+  );
+  app.get(
+    `/api/users`,
+    requireUser,
+    requireSession,
+    getUserHandler
   );
 
   // session

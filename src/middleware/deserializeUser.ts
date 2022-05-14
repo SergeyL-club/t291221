@@ -17,7 +17,7 @@ const deserializeUser = async function (
   if (!accessToken) return next();
 
   const { decoded, expired } = verifyJwt(accessToken);
-
+  
   if (decoded) {
     res.locals.user = decoded;
     return next();
@@ -30,8 +30,9 @@ const deserializeUser = async function (
     }
 
     const result = verifyJwt(newAccessToken);
+    
 
-    res.locals.user = result.decoded;
+    res.locals.user = (<any>result.decoded)["_doc"];
     return next();
   }
 

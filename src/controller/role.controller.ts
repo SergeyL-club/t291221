@@ -14,6 +14,7 @@ import checkAdmin from "../utils/checkAdmin";
 import logger from "../utils/logger";
 import mongoose from "mongoose";
 import { findUser } from "../service/user.service";
+import { omit } from "lodash";
 
 export async function createRoleHandler(
   req: Request<{}, {}, CreateRoleInput["body"]>,
@@ -21,14 +22,14 @@ export async function createRoleHandler(
 ) {
   try {
     if (req.body.name.trim() === "Client" || req.body.name.trim() === "Admin") {
-      return res.status(409).send(`Admin or Client name reserved`);
+      return res.status(409).send(`Admin or Client name reserved`).end();
     }
 
     const role = await createRole(req.body);
-    return res.send(role);
+    return res.status(200).send(role);
   } catch (e: any) {
     logger.error(e);
-    res.status(409).send(e.message);
+    res.status(409).send(e.message).end();
   }
 }
 
@@ -43,9 +44,13 @@ export async function getRoleHandler(
   if (!req.body.isMain && !isAdmin) return res.sendStatus(403);
 
   if (req.body.isMain) {
-    return res.send(await findRole({ _id: user.roleId }));
+    const role = await findOneRole({ _id: user.role });
+    return res.status(200).send(omit(role?.toJSON(), "_id", "createdAt", "updatedAt", "__v")).end();
   } else {
-    return res.send(await findRole({}));
+    const roles = await findRole({});
+    let omitRoles: any[] = [];
+    roles.forEach(role => omitRoles.push(omit(role.toJSON(), "_id", "createdAt", "updatedAt", "__v")));
+    return res.status(200).send(omitRoles).end();
   }
 }
 
@@ -66,28 +71,28 @@ export async function deleteOneRoleHadler(
     }
 
     const candidatesRole = await findUser({
-      roleId: new mongoose.Types.ObjectId(req.body.roleId),
+      role: new mongoose.Types.ObjectId(req.body.role),
     });
 
     if (candidatesRole.length > 0) {
       for (let i = 0; i < candidatesRole.length; i++) {
         let candidate = candidatesRole[i];
         if (roleDef) {
-          candidate.roleId = roleDef._id;
+          candidate.role = roleDef._id;
           await candidate.save();
         } else if (newRole) {
-          candidate.roleId = newRole._id;
+          candidate.role = newRole._id;
           await candidate.save();
         }
       }
     }
 
     const role = await deleteOneRole({
-      _id: new mongoose.Types.ObjectId(req.body.roleId),
+      _id: new mongoose.Types.ObjectId(req.body.role),
     });
-    return res.send(role);
+    return res.status(200).send(role).end();
   } catch (e: any) {
     logger.error(e);
-    res.status(409).send(e.message);
+    res.status(409).send(e.message).end();
   }
 }
