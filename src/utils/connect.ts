@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import config from "config";
 import { ConfigParam } from "../../config/default";
 import logger from "./logger";
+import initUpdate from "./initUpdate";
 
 async function connect() {
   const dbUrl = config.get<string>(ConfigParam.dbUrl);
@@ -10,6 +11,7 @@ async function connect() {
   try {
     await mongoose.connect(dbUrl);
     logger.info(`Connected to db ${dbName}`);
+    initUpdate();
   } catch (e) {
     logger.error(`Could not connect to db ${dbName}`);
     process.exit(1);
