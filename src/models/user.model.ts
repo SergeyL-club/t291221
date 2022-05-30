@@ -9,6 +9,7 @@ export interface UserDocumet extends mongoose.Document {
   name: string;
   password: string;
   role: mongoose.Types.ObjectId;
+  isOnline?: boolean;
   createAt: Date;
   updateAt: Date;
   comparePassword(cadidatePassword: string): Promise<boolean>;
@@ -18,6 +19,7 @@ const userSchema = new mongoose.Schema<UserDocumet>(
   {
     email: { type: String, required: true, unique: true },
     name: { type: String, required: true },
+    isOnline: { type: Boolean, default: false },
     role: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

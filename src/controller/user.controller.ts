@@ -23,7 +23,6 @@ export async function getUserHandler(
 ) {
   try {
     const userId = res.locals.user._id;
-    console.log(userId);
     
     const user = await findOneFullUser({ _id: userId });
 

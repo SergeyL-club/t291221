@@ -1,6 +1,5 @@
 export enum listModels {
   user = "User",
   session = "Session",
-  role = "Role",
-  orders_bizlato = "OrdersBizlato"
+  role = "Role"
 }
